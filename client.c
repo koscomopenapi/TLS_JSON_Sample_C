@@ -7,7 +7,8 @@
 SSL_CTX *setup_client_ctx(void) {
 	SSL_CTX *ctx;
 
-	ctx = SSL_CTX_new(SSLv23_method());
+//	ctx = SSL_CTX_new(SSLv23_method());
+	ctx = SSL_CTX_new(TLSv1_2_method());
 	if (SSL_CTX_load_verify_locations(ctx, CAFILE, CADIR) != 1)
 		int_error("Error loading CA file and/or directory");
 	if (SSL_CTX_set_default_verify_paths(ctx) != 1)
