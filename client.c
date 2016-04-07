@@ -35,7 +35,7 @@ int do_client_loop(SSL *ssl) {
 
 	// start JSON 데이터 생성
 	json_t *json = json_object();
-	json_t *portfolioRequest = json_object();
+
 
 	json_t *partner = json_object();
 	json_object_set(partner, "comId", json_string("uberple"));
@@ -57,8 +57,6 @@ int do_client_loop(SSL *ssl) {
 	json_object_set(devInfo, "ipAddr", json_string("192168001010"));
 	json_object_set(devInfo, "macAddr", json_string("7054D27EE247"));
 
-	json_t *body = json_object();
-
 	json_t *accInfo = json_object();
 	json_object_set(accInfo, "realAccNo", json_string("001-01-992323232"));
 	json_object_set(accInfo, "vtAccNp", json_string("123214985324234"));
@@ -67,10 +65,13 @@ int do_client_loop(SSL *ssl) {
 	json_object_set(queryType, "assetType", json_string("ALL"));
 	json_object_set(queryType, "rspType", json_string("RAT"));
 
+	json_t *portfolioRequest = json_object();
 	json_object_set(json, "portfolioRequest", portfolioRequest);
 	json_object_set(portfolioRequest, "partner", partner);
 	json_object_set(portfolioRequest, "commonHeader", commonHeader);
 	json_object_set(portfolioRequest, "devInfo", devInfo);
+
+	json_t *body = json_object();
 	json_object_set(portfolioRequest, "body", body);
 	json_object_set(body, "accInfo", accInfo);
 	json_object_set(body, "queryType", queryType);
