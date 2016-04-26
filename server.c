@@ -20,16 +20,24 @@ SSL_CTX *setup_server_ctx(void)
 {
 	SSL_CTX *ctx;
 
+	char pass[150] = "1234";
+	int ret;
+
 	//ctx = SSL_CTX_new(SSLv23_method());
 	ctx = SSL_CTX_new(TLSv1_2_method());
 	if (SSL_CTX_load_verify_locations(ctx, CAFILE, CADIR) != 1)
 		int_error("Error loading CA file and/or directory");
 	if (SSL_CTX_set_default_verify_paths(ctx) != 1)
 		int_error("Error loading default CA file and/or directory");
+
+	SSL_CTX_set_default_passwd_cb_userdata(ctx,pass);
+
 	if (SSL_CTX_use_certificate_chain_file(ctx, CERTFILE) != 1)
 		int_error("Error loading certificate from file");
-	if (SSL_CTX_use_PrivateKey_file(ctx, CERTFILE, SSL_FILETYPE_PEM) != 1)
-		int_error("Error loading private key from file");
+	ret = SSL_CTX_use_PrivateKey_file(ctx, CERTFILE, SSL_FILETYPE_PEM);
+	if (ret != 1) {
+		printf("Error loading private key from file = [%d]", ret);
+	}
 	SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
 			verify_callback);
 	SSL_CTX_set_verify_depth(ctx, 4);

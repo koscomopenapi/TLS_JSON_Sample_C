@@ -7,12 +7,16 @@
 SSL_CTX *setup_client_ctx(void) {
 	SSL_CTX *ctx;
 
+	char pass[150] = "1234";
 //	ctx = SSL_CTX_new(SSLv23_method());
 	ctx = SSL_CTX_new(TLSv1_2_method());
 	if (SSL_CTX_load_verify_locations(ctx, CAFILE, CADIR) != 1)
 		int_error("Error loading CA file and/or directory");
 	if (SSL_CTX_set_default_verify_paths(ctx) != 1)
 		int_error("Error loading default CA file and/or directory");
+
+ SSL_CTX_set_default_passwd_cb_userdata(ctx,pass);
+
 	if (SSL_CTX_use_certificate_chain_file(ctx, CERTFILE) != 1)
 		int_error("Error loading certificate from file");
 	if (SSL_CTX_use_PrivateKey_file(ctx, CERTFILE, SSL_FILETYPE_PEM) != 1)
